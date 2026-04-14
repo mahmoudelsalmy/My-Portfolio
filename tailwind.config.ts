@@ -39,6 +39,7 @@ const config: Config = {
         'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
         'float': 'float 6s ease-in-out infinite',
         'border-flow': 'borderFlow 3s ease infinite',
+        'shine': 'shine 1.5s infinite',
       },
       keyframes: {
         shimmer: {
@@ -56,6 +57,10 @@ const config: Config = {
         borderFlow: {
           '0%, 100%': { borderColor: '#7C3AED' },
           '50%': { borderColor: '#2563EB' },
+        },
+        shine: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(200%)' },
         },
       },
       backgroundImage: {

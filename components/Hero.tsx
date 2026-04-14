@@ -87,10 +87,12 @@ export function Hero() {
                 href="/api/download"
                 target="_blank"
                 rel="noreferrer"
-                className="px-6 py-3 rounded-xl bg-accent text-white font-semibold text-sm hover:bg-accent/90 focus:scale-95 hover:scale-105 active:scale-95 transition-all shadow-lg shadow-accent/20 flex items-center gap-2"
+                className="group relative px-6 py-3 rounded-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-semibold text-sm transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] dark:hover:shadow-[0_8px_30px_rgb(255,255,255,0.12)] flex items-center gap-2 overflow-hidden"
               >
-                <Download size={16} />
-                Download CV
+                {/* Subtle shine effect on hover */}
+                <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 dark:via-black/10 to-transparent group-hover:animate-shine" />
+                <Download size={16} className="relative z-10" />
+                <span className="relative z-10">Download CV</span>
               </a>
               <motion.button
                 onClick={() =>
@@ -98,9 +100,8 @@ export function Hero() {
                     .querySelector('#contact')
                     ?.scrollIntoView({ behavior: 'smooth' })
                 }
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
-                className="px-6 py-3 rounded-xl border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-semibold text-sm hover:border-accent hover:text-accent transition-colors flex items-center gap-2"
+                whileActive={{ scale: 0.98 }}
+                className="px-6 py-3 rounded-full border border-gray-200 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-md text-gray-700 dark:text-gray-300 font-semibold text-sm hover:border-gray-300 dark:hover:border-white/20 transition-all flex items-center gap-2"
               >
                 <MessageCircle size={16} />
                 Contact Me
