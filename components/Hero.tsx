@@ -100,7 +100,7 @@ export function Hero() {
                     .querySelector('#contact')
                     ?.scrollIntoView({ behavior: 'smooth' })
                 }
-                whileActive={{ scale: 0.98 }}
+                whileTap={{ scale: 0.98 }}
                 className="px-6 py-3 rounded-full border border-gray-200 dark:border-white/10 bg-white/50 dark:bg-white/5 backdrop-blur-md text-gray-700 dark:text-gray-300 font-semibold text-sm hover:border-gray-300 dark:hover:border-white/20 transition-all flex items-center gap-2"
               >
                 <MessageCircle size={16} />
