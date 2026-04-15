@@ -1,8 +1,8 @@
-'use client'
+﻿'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Lenis from 'lenis'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { Navbar } from '@/components/Navbar'
 import { Hero } from '@/components/Hero'
 import { ScrollProgress } from '@/components/ScrollProgress'
@@ -42,6 +42,19 @@ const techStack = [
 const projects = [
   {
     id: 1,
+    badge: 'IoT · Smart Home',
+    title: 'Smart Home Automation',
+    description:
+      'Full IoT smart home system enabling remote control of appliances, lights, and security sensors via ESP8266 Wi-Fi. Firmware written in C++ with real-time MQTT messaging and mobile dashboard.',
+    tech: ['C++', 'ESP8266', 'MQTT', 'IoT'],
+    github: 'https://github.com/mahmoudelsalmy/Smart-Home-Automation-System-IoT',
+    demo: null,
+    featured: false,
+    gradient: 'from-green-50 via-white to-gray-50 dark:from-green-900/40 dark:via-slate-900 dark:to-slate-950',
+    accent: '#16a34a',
+  },
+  {
+    id: 2,
     badge: 'Backend · Enterprise',
     title: 'Smart Inventory Management',
     description:
@@ -54,7 +67,7 @@ const projects = [
     accent: '#7C3AED',
   },
   {
-    id: 2,
+    id: 3,
     badge: 'IoT · Embedded',
     title: 'Automated Plant Watering System',
     description:
@@ -67,20 +80,20 @@ const projects = [
     accent: '#10b981',
   },
   {
-    id: 3,
+    id: 4,
     badge: 'Machine Learning · Python',
     title: 'Predictive Maintenance ML',
     description:
       'Machine learning system that predicts equipment failures before they occur, reducing downtime. Built with scikit-learn classifiers and a Streamlit web dashboard for real-time inference.',
     tech: ['Python', 'scikit-learn', 'Streamlit', 'Pandas'],
     github: 'https://github.com/mahmoudelsalmy/Predictive-Maintenance-ML',
-    demo: null,
+    demo: 'https://predictive-maintenance-system-ml.streamlit.app/',
     featured: true,
     gradient: 'from-blue-50 via-white to-gray-50 dark:from-blue-900/60 dark:via-slate-900 dark:to-slate-950',
     accent: '#2563EB',
   },
   {
-    id: 4,
+    id: 5,
     badge: 'Desktop · OOP',
     title: 'University Management System',
     description:
@@ -93,7 +106,7 @@ const projects = [
     accent: '#f59e0b',
   },
   {
-    id: 5,
+    id: 6,
     badge: 'Desktop · Health',
     title: 'Clinic Management System',
     description:
@@ -107,7 +120,7 @@ const projects = [
   },
   // --- shown only after "Show More" ---
   {
-    id: 6,
+    id: 7,
     badge: 'Frontend · Web',
     title: 'Car Showcase Website',
     description:
@@ -120,7 +133,20 @@ const projects = [
     accent: '#0ea5e9',
   },
   {
-    id: 7,
+    id: 8,
+    badge: 'Systems · Data Structures',
+    title: 'Queue-Based Ticketing System',
+    description:
+      'Efficient queue-based customer service ticketing system in C++. Implements priority queues, agent pools, and service-time simulation — demonstrating core data-structure mastery.',
+    tech: ['C++', 'Data Structures', 'OOP', 'CLI'],
+    github: 'https://github.com/mahmoudelsalmy/Queue-based-Ticketing-System',
+    demo: null,
+    featured: false,
+    gradient: 'from-teal-50 via-white to-gray-50 dark:from-teal-900/40 dark:via-slate-900 dark:to-slate-950',
+    accent: '#0d9488',
+  },
+  {
+    id: 9,
     badge: 'Game · C++',
     title: 'Multiplayer Hangman Game',
     description:
@@ -133,7 +159,7 @@ const projects = [
     accent: '#d97706',
   },
   {
-    id: 8,
+    id: 10,
     badge: 'Hardware · VHDL',
     title: 'Traffic Light Controller',
     description:
@@ -144,32 +170,6 @@ const projects = [
     featured: false,
     gradient: 'from-red-50 via-white to-gray-50 dark:from-red-900/40 dark:via-slate-900 dark:to-slate-950',
     accent: '#ef4444',
-  },
-  {
-    id: 9,
-    badge: 'IoT · Smart Home',
-    title: 'Smart Home Automation',
-    description:
-      'Full IoT smart home system enabling remote control of appliances, lights, and security sensors via ESP8266 Wi-Fi. Firmware written in C++ with real-time MQTT messaging and mobile dashboard.',
-    tech: ['C++', 'ESP8266', 'MQTT', 'IoT'],
-    github: 'https://github.com/mahmoudelsalmy/Smart-Home-Automation-System-IoT',
-    demo: null,
-    featured: false,
-    gradient: 'from-green-50 via-white to-gray-50 dark:from-green-900/40 dark:via-slate-900 dark:to-slate-950',
-    accent: '#16a34a',
-  },
-  {
-    id: 10,
-    badge: 'Systems · Data Structures',
-    title: 'Queue-Based Ticketing System',
-    description:
-      'Efficient queue-based customer service ticketing system in C++. Implements priority queues, agent pools, and service-time simulation — demonstrating core data-structure mastery.',
-    tech: ['C++', 'Data Structures', 'OOP', 'CLI'],
-    github: 'https://github.com/mahmoudelsalmy/Queue-based-Ticketing-System',
-    demo: null,
-    featured: false,
-    gradient: 'from-teal-50 via-white to-gray-50 dark:from-teal-900/40 dark:via-slate-900 dark:to-slate-950',
-    accent: '#0d9488',
   },
 ]
 
@@ -183,14 +183,46 @@ const socialContact = [
 /* ──────────────────────── PROJECT CARD ─────────────────────── */
 
 function ProjectCard({ project, index }: { project: typeof projects[0]; index: number }) {
+  const x = useMotionValue(0)
+  const y = useMotionValue(0)
+
+  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 15 })
+  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 15 })
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ['7.5deg', '-7.5deg'])
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ['-7.5deg', '7.5deg'])
+
+  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const width = rect.width
+    const height = rect.height
+    const mouseX = e.clientX - rect.left
+    const mouseY = e.clientY - rect.top
+    const xPct = mouseX / width - 0.5
+    const yPct = mouseY / height - 0.5
+    x.set(xPct)
+    y.set(yPct)
+  }
+
+  function handleMouseLeave() {
+    x.set(0)
+    y.set(0)
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ delay: index * 0.08, duration: 0.5, ease: 'easeOut' }}
-      whileHover={{ y: -4 }}
-      className={`relative rounded-2xl overflow-hidden border border-gray-200 dark:border-white/5 bg-gradient-to-br ${project.gradient} group shadow-sm dark:shadow-none`}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: 'preserve-3d',
+      }}
+      className={`relative rounded-2xl overflow-hidden border border-gray-200 dark:border-white/5 bg-gradient-to-br ${project.gradient} group shadow-lg dark:shadow-none cursor-pointer`}
     >
       {/* Glow on hover */}
       <div
@@ -198,7 +230,7 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
         style={{ boxShadow: `inset 0 0 40px ${project.accent}20` }}
       />
 
-      <div className="relative p-6 flex flex-col h-full min-h-[220px]">
+      <div className="relative p-6 flex flex-col h-full min-h-[220px] transform-gpu transition-all duration-300" style={{ transform: "translateZ(30px)" }}>
         {/* Badge */}
         <span
           className="self-start text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full mb-4 border"
@@ -280,7 +312,7 @@ export default function Home() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setFormStatus('loading')
-    
+
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
@@ -340,7 +372,7 @@ export default function Home() {
                 <div className="flex gap-12">
                   {[
                     { value: '3+', label: 'Years Engineering' },
-                    { value: '8+', label: 'Projects Delivered' },
+                    { value: '10+', label: 'Projects Delivered' },
                   ].map((s) => (
                     <div key={s.label}>
                       <div className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-1">{s.value}</div>
@@ -401,9 +433,102 @@ export default function Home() {
           </div>
         </section>
 
-        {/* ──── PROJECTS ──── */}
-        <section id="projects" className="py-24 md:py-32 border-t border-gray-200 dark:border-dark-border/50">
+        {/* ──── SKILLS ──── */}
+        <section id="skills" className="py-24 md:py-32 border-t border-gray-200 dark:border-dark-border/50">
           <div className="container mx-auto px-6 md:px-10">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent mb-3">Proficiency</p>
+                <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">Technical Expertise</h2>
+              </div>
+            </div>
+            {/* Categorized skill cards */}
+            <div className="space-y-8">
+              {[
+                {
+                  category: 'Programming Languages',
+                  accent: '#7C3AED',
+                  skills: ['C / C++', 'C#', 'Java', 'Python', 'SQL', 'VHDL', 'HTML / CSS'],
+                },
+                {
+                  category: 'Frameworks & Platforms',
+                  accent: '#2563EB',
+                  skills: ['ASP.NET Core MVC', '.NET WinForms', 'JavaFX', 'Streamlit', 'Bootstrap'],
+                },
+                {
+                  category: 'Embedded & Hardware',
+                  accent: '#10b981',
+                  skills: ['Arduino', 'ESP8266 / ESP32', 'PIC Microcontrollers', 'Xilinx ISE / ISim', 'FPGA / FSM Design', 'IoT Protocols', 'Sensor Integration'],
+                },
+                {
+                  category: 'Tools & Practices',
+                  accent: '#f59e0b',
+                  skills: ['Git / GitHub', 'Visual Studio', 'VS Code', 'Netbeans', 'SQL Server', 'OOP / Design Patterns'],
+                },
+              ].map((group, gi) => (
+                <motion.div
+                  key={group.category}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: gi * 0.1 }}
+                  className="bg-white dark:bg-dark-card rounded-2xl border border-gray-200 dark:border-dark-border p-6 shadow-sm dark:shadow-none"
+                >
+                  <div className="flex items-center gap-2 mb-4">
+                    <span
+                      className="w-2 h-2 rounded-full flex-shrink-0"
+                      style={{ background: group.accent }}
+                    />
+                    <h3
+                      className="text-sm font-bold uppercase tracking-widest"
+                      style={{ color: group.accent }}
+                    >
+                      {group.category}
+                    </h3>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {group.skills.map((skill, si) => (
+                      <motion.span
+                        key={skill}
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: gi * 0.1 + si * 0.04 }}
+                        whileHover={{ scale: 1.06, y: -2 }}
+                        className="px-3 py-1.5 rounded-lg text-xs font-medium border transition-all cursor-default"
+                        style={{
+                          color: group.accent,
+                          borderColor: `${group.accent}40`,
+                          background: `${group.accent}12`,
+                        }}
+                      >
+                        {skill}
+                      </motion.span>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ──── PROJECTS ──── */}
+        <section id="projects" className="relative py-24 md:py-32 border-t border-gray-200 dark:border-dark-border/50 overflow-hidden">
+          {/* Animated 3D/ambient background for projects */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+            <motion.div
+              className="absolute top-[-20%] left-[10%] w-[500px] h-[500px] rounded-full bg-accent/5 dark:bg-accent/10 blur-[120px]"
+              animate={{ x: [-30, 30, -30], y: [-30, 30, -30] }}
+              transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+              className="absolute bottom-[-20%] right-[10%] w-[400px] h-[400px] rounded-full bg-blue-500/5 dark:bg-blue-500/10 blur-[100px]"
+              animate={{ x: [30, -30, 30], y: [30, -30, 30] }}
+              transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+            />
+          </div>
+
+          <div className="container relative z-10 mx-auto px-6 md:px-10">
 
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
@@ -466,88 +591,9 @@ export default function Home() {
                 {showAllProjects ? (
                   <><ChevronUp size={16} className="group-hover:text-accent transition-colors" /> Show Less</>
                 ) : (
-                  <><ChevronDown size={16} className="group-hover:text-accent transition-colors" /> Show More ({projects.length - 5} more projects)</>
+                  <><ChevronDown size={16} className="group-hover:text-accent transition-colors" /> Show More Projects </>
                 )}
               </motion.button>
-            </div>
-          </div>
-        </section>
-
-        {/* ──── SKILLS ──── */}
-        <section id="skills" className="py-24 md:py-32 border-t border-gray-200 dark:border-dark-border/50">
-          <div className="container mx-auto px-6 md:px-10">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent mb-3">Proficiency</p>
-                <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">Technical Expertise</h2>
-              </div>
-            </div>
-            {/* Categorized skill cards */}
-            <div className="space-y-8">
-              {[
-                {
-                  category: 'Programming Languages',
-                  accent: '#7C3AED',
-                  skills: ['C#', 'Java', 'C / C++', 'Python', 'JavaScript / TypeScript', 'SQL', 'VHDL', 'HTML / CSS'],
-                },
-                {
-                  category: 'Frameworks & Platforms',
-                  accent: '#2563EB',
-                  skills: ['ASP.NET Core MVC', '.NET WinForms', 'JavaFX', 'Next.js / React', 'Streamlit', 'Tailwind CSS'],
-                },
-                {
-                  category: 'Embedded & Hardware',
-                  accent: '#10b981',
-                  skills: ['ESP8266 / ESP32', 'PIC Microcontrollers', 'Xilinx ISE / ISim', 'FPGA / FSM Design', 'IoT Protocols', 'Sensor Integration'],
-                },
-                {
-                  category: 'Tools & Practices',
-                  accent: '#f59e0b',
-                  skills: ['Git / GitHub', 'Visual Studio', 'VS Code', 'SQL Server', 'OOP / Design Patterns', 'REST APIs'],
-                },
-              ].map((group, gi) => (
-                <motion.div
-                  key={group.category}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: gi * 0.1 }}
-                  className="bg-white dark:bg-dark-card rounded-2xl border border-gray-200 dark:border-dark-border p-6 shadow-sm dark:shadow-none"
-                >
-                  <div className="flex items-center gap-2 mb-4">
-                    <span
-                      className="w-2 h-2 rounded-full flex-shrink-0"
-                      style={{ background: group.accent }}
-                    />
-                    <h3
-                      className="text-sm font-bold uppercase tracking-widest"
-                      style={{ color: group.accent }}
-                    >
-                      {group.category}
-                    </h3>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {group.skills.map((skill, si) => (
-                      <motion.span
-                        key={skill}
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: gi * 0.1 + si * 0.04 }}
-                        whileHover={{ scale: 1.06, y: -2 }}
-                        className="px-3 py-1.5 rounded-lg text-xs font-medium border transition-all cursor-default"
-                        style={{
-                          color: group.accent,
-                          borderColor: `${group.accent}40`,
-                          background: `${group.accent}12`,
-                        }}
-                      >
-                        {skill}
-                      </motion.span>
-                    ))}
-                  </div>
-                </motion.div>
-              ))}
             </div>
           </div>
         </section>

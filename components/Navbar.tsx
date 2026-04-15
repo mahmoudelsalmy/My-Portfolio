@@ -70,11 +70,10 @@ export function Navbar() {
         initial="hidden"
         animate="visible"
         variants={navVariants}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          isScrolled
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
             ? 'glass-effect py-3 shadow-sm dark:shadow-none border-b border-gray-200/60 dark:border-white/[0.06]'
             : 'bg-transparent py-5'
-        }`}
+          }`}
       >
         <div className="container mx-auto px-4 md:px-6">
           <div className="flex items-center justify-between">
@@ -92,11 +91,10 @@ export function Navbar() {
                   <Link
                     href={item.href}
                     onClick={() => handleClick(item.href)}
-                    className={`text-sm font-medium transition-colors duration-200 ${
-                      activeSection === item.href.substring(1)
+                    className={`text-sm font-medium transition-colors duration-200 ${activeSection === item.href.substring(1)
                         ? 'text-accent'
                         : 'text-text dark:text-text-dark hover:text-accent'
-                    }`}
+                      }`}
                   >
                     {item.name}
                   </Link>
@@ -147,11 +145,10 @@ export function Navbar() {
                   <Link
                     href={item.href}
                     onClick={() => handleClick(item.href)}
-                    className={`text-xl font-medium transition-colors ${
-                      activeSection === item.href.substring(1)
+                    className={`text-xl font-medium transition-colors ${activeSection === item.href.substring(1)
                         ? 'text-accent'
                         : 'text-text dark:text-text-dark'
-                    }`}
+                      }`}
                   >
                     {item.name}
                   </Link>
