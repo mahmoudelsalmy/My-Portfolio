@@ -70,8 +70,8 @@ export function Navbar() {
         initial="hidden"
         animate="visible"
         variants={navVariants}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
-            ? 'glass-effect py-3 shadow-sm dark:shadow-none border-b border-gray-200/60 dark:border-white/[0.06]'
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${isScrolled
+            ? 'bg-white/70 dark:bg-[#030014]/60 backdrop-blur-xl py-3 shadow-[0_2px_20px_rgba(0,0,0,0.04)] dark:shadow-[0_2px_20px_rgba(0,0,0,0.2)] border-b border-gray-200/60 dark:border-white/[0.04]'
             : 'bg-transparent py-5'
           }`}
       >
@@ -85,26 +85,34 @@ export function Navbar() {
             </motion.div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-7">
+            <div className="hidden md:flex items-center gap-1 lg:gap-2 p-1.5 rounded-2xl bg-white/40 dark:bg-black/20 border border-gray-200/50 dark:border-white/5 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.04)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.2)] transition-all duration-300">
               {navItems.map((item) => (
-                <motion.div key={item.name} variants={itemVariants} className="relative">
+                <motion.div 
+                  key={item.name} 
+                  variants={itemVariants} 
+                  className="relative"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: 'tween', ease: 'easeInOut', duration: 0.2 }}
+                >
                   <Link
                     href={item.href}
                     onClick={() => handleClick(item.href)}
-                    className={`text-sm font-medium transition-colors duration-200 ${activeSection === item.href.substring(1)
-                        ? 'text-accent'
-                        : 'text-text dark:text-text-dark hover:text-accent'
+                    className={`relative px-4 py-2 text-sm font-medium transition-colors duration-300 z-10 flex items-center justify-center tracking-wide ${activeSection === item.href.substring(1)
+                        ? 'text-accent dark:text-accent-300 drop-shadow-sm'
+                        : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
                       }`}
                   >
                     {item.name}
+                    {activeSection === item.href.substring(1) && (
+                      <motion.div
+                        layoutId="activeSectionPill"
+                        className="absolute inset-0 rounded-xl bg-accent/10 dark:bg-accent/15 border border-accent/10 dark:border-accent/20"
+                        transition={{ type: 'tween', ease: [0.25, 0.1, 0.25, 1], duration: 0.3 }}
+                        style={{ zIndex: -1 }}
+                      />
+                    )}
                   </Link>
-                  {activeSection === item.href.substring(1) && (
-                    <motion.div
-                      layoutId="activeSection"
-                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-accent"
-                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                    />
-                  )}
                 </motion.div>
               ))}
             </div>

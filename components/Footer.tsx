@@ -37,7 +37,7 @@ export function Footer() {
               <LogoSvg size="full" />
             </div>
             <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-xs">
-              Backend & Embedded Systems Developer building scalable solutions that bridge software and hardware.
+              Software & AI and Embedded Systems Engineer building scalable solutions that bridge software and hardware.
             </p>
             {/* Social icons */}
             <div className="flex items-center gap-3 pt-1">
@@ -113,9 +113,9 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1.5">
-            © 2026 Mahmoud Elsalmy · Built with
+            © 2026 Mahmoud Elsalmy · All rights reserved.
             <Heart size={11} className="text-accent fill-accent" />
-            using Next.js & Framer Motion
+
           </p>
 
           {/* Scroll to top */}

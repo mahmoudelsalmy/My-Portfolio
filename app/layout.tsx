@@ -6,13 +6,18 @@ import { Providers } from './providers'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://mahmoudelsalmy.dev'),
-  title: 'Mahmoud Elsalmy | Software & Embedded Systems Engineer',
+  metadataBase: new URL('https://mahmoudelsalmy-portfolio.vercel.app'),
+  title: 'Mahmoud Elsalmy | Software & AI and Embedded Systems Engineer',
   description:
     'Computer Systems Engineering student specializing in Software Engineering, Embedded Systems, and AI. Building scalable backends, IoT firmware, and ML systems.',
   keywords: [
     'Software Engineer',
     'Embedded Systems',
+    'Backend Developer',
+    'Cybersecurity',
+    'AI',
+    'C++',
+    'C',
     'C#',
     'ASP.NET',
     'IoT',
@@ -32,7 +37,7 @@ export const metadata: Metadata = {
     title: 'Mahmoud Elsalmy | Software & Embedded Systems Engineer',
     description:
       'Computer Systems Engineering student specializing in Software Engineering, Embedded Systems, and AI.',
-    url: 'https://mahmoudelsalmy.dev',
+    url: 'https://mahmoudelsalmy-portfolio.vercel.app',
     siteName: 'Mahmoud Elsalmy Portfolio',
     images: [{ url: '/logo.png', width: 1024, height: 512, alt: 'Mahmoud Elsalmy Portfolio' }],
     locale: 'en_US',

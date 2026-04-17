@@ -3,6 +3,8 @@
 import { motion, useMotionValue, useTransform } from 'framer-motion'
 import { Github, ExternalLink, Code2 } from 'lucide-react'
 import { useState } from 'react'
+import Image from 'next/image'
+
 
 interface ProjectCardProps {
   title: string
@@ -14,7 +16,7 @@ interface ProjectCardProps {
   index: number
 }
 
-export function ProjectCard({ title, description, techStack, githubUrl, demoUrl, index }: ProjectCardProps) {
+export function ProjectCard({ title, description, techStack, githubUrl, demoUrl, image, index }: ProjectCardProps) {
   const [isHovered, setIsHovered] = useState(false)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
@@ -60,6 +62,7 @@ export function ProjectCard({ title, description, techStack, githubUrl, demoUrl,
       />
 
       <div className="relative p-6 transform-gpu" style={{ transform: 'translateZ(20px)' }}>
+
         {/* Icon */}
         <motion.div
           className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mb-4"

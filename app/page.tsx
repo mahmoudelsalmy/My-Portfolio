@@ -1,12 +1,14 @@
-﻿'use client'
+'use client'
 
 import { useEffect, useState, useRef } from 'react'
 import Lenis from 'lenis'
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import Image from 'next/image'
 import { Navbar } from '@/components/Navbar'
 import { Hero } from '@/components/Hero'
 import { ScrollProgress } from '@/components/ScrollProgress'
 import { Footer } from '@/components/Footer'
+import { AnimatedBackground } from '@/components/AnimatedBackground'
 import {
   Github,
   ExternalLink,
@@ -52,6 +54,7 @@ const projects = [
     featured: false,
     gradient: 'from-green-50 via-white to-gray-50 dark:from-green-900/40 dark:via-slate-900 dark:to-slate-950',
     accent: '#16a34a',
+    image: '/hero-tech.png',
   },
   {
     id: 2,
@@ -65,6 +68,7 @@ const projects = [
     featured: true,
     gradient: 'from-violet-50 via-white to-gray-50 dark:from-violet-900/60 dark:via-slate-900 dark:to-slate-950',
     accent: '#7C3AED',
+    image: '/Inventory.png',
   },
   {
     id: 3,
@@ -78,6 +82,7 @@ const projects = [
     featured: true,
     gradient: 'from-emerald-50 via-white to-gray-50 dark:from-emerald-900/40 dark:via-slate-900 dark:to-slate-950',
     accent: '#10b981',
+    image: '/Plant_Watering.png',
   },
   {
     id: 4,
@@ -91,22 +96,10 @@ const projects = [
     featured: true,
     gradient: 'from-blue-50 via-white to-gray-50 dark:from-blue-900/60 dark:via-slate-900 dark:to-slate-950',
     accent: '#2563EB',
+    image: '/Predictive_Maintenance.png',
   },
   {
     id: 5,
-    badge: 'Desktop · OOP',
-    title: 'University Management System',
-    description:
-      'Java desktop application with JavaFX GUI managing full university operations — students, staff, courses, and grades with role-based access control for admins, staff, and students.',
-    tech: ['Java', 'JavaFX', 'OOP', 'SQL'],
-    github: 'https://github.com/mahmoudelsalmy/University-Management-System',
-    demo: null,
-    featured: true,
-    gradient: 'from-orange-50 via-white to-gray-50 dark:from-orange-900/40 dark:via-slate-900 dark:to-slate-950',
-    accent: '#f59e0b',
-  },
-  {
-    id: 6,
     badge: 'Desktop · Health',
     title: 'Clinic Management System',
     description:
@@ -117,6 +110,21 @@ const projects = [
     featured: true,
     gradient: 'from-pink-50 via-white to-gray-50 dark:from-pink-900/40 dark:via-slate-900 dark:to-slate-950',
     accent: '#ec4899',
+    image: '/Clinic.png',
+  },
+  {
+    id: 6,
+    badge: 'Desktop · OOP',
+    title: 'University Management System',
+    description:
+      'Java desktop application with JavaFX GUI managing full university operations — students, staff, courses, and grades with role-based access control for admins, staff, and students.',
+    tech: ['Java', 'JavaFX', 'OOP', 'SQL'],
+    github: 'https://github.com/mahmoudelsalmy/University-Management-System',
+    demo: null,
+    featured: true,
+    gradient: 'from-orange-50 via-white to-gray-50 dark:from-orange-900/40 dark:via-slate-900 dark:to-slate-950',
+    accent: '#f59e0b',
+    image: '/University.png',
   },
   // --- shown only after "Show More" ---
   {
@@ -131,6 +139,7 @@ const projects = [
     featured: false,
     gradient: 'from-sky-50 via-white to-gray-50 dark:from-sky-900/40 dark:via-slate-900 dark:to-slate-950',
     accent: '#0ea5e9',
+    image: '/Car.png',
   },
   {
     id: 8,
@@ -144,6 +153,7 @@ const projects = [
     featured: false,
     gradient: 'from-teal-50 via-white to-gray-50 dark:from-teal-900/40 dark:via-slate-900 dark:to-slate-950',
     accent: '#0d9488',
+    image: '/Queue.png',
   },
   {
     id: 9,
@@ -157,6 +167,7 @@ const projects = [
     featured: false,
     gradient: 'from-amber-50 via-white to-gray-50 dark:from-amber-900/40 dark:via-slate-900 dark:to-slate-950',
     accent: '#d97706',
+    image: '/Hangman.png',
   },
   {
     id: 10,
@@ -170,6 +181,7 @@ const projects = [
     featured: false,
     gradient: 'from-red-50 via-white to-gray-50 dark:from-red-900/40 dark:via-slate-900 dark:to-slate-950',
     accent: '#ef4444',
+    image: '/Traffic.png',
   },
 ]
 
@@ -222,15 +234,29 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
         rotateY,
         transformStyle: 'preserve-3d',
       }}
-      className={`relative rounded-2xl overflow-hidden border border-gray-200 dark:border-white/5 bg-gradient-to-br ${project.gradient} group shadow-lg dark:shadow-none cursor-pointer`}
+      className={`relative flex flex-col h-full rounded-2xl overflow-hidden border border-gray-200 dark:border-white/5 bg-gradient-to-br ${project.gradient} group shadow-lg dark:shadow-none cursor-pointer`}
     >
       {/* Glow on hover */}
       <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10"
         style={{ boxShadow: `inset 0 0 40px ${project.accent}20` }}
       />
 
-      <div className="relative p-6 flex flex-col h-full min-h-[220px] transform-gpu transition-all duration-300" style={{ transform: "translateZ(30px)" }}>
+      {/* Project Image */}
+      {project.image && (
+        <div className="relative w-full h-52 overflow-hidden bg-gray-100 dark:bg-[#0A0A0A] border-b border-gray-200 dark:border-white/5">
+          <Image
+            src={project.image}
+            alt={`${project.title} project preview`}
+            fill
+            className="object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0 pointer-events-none" />
+        </div>
+      )}
+
+      <div className="relative p-6 flex flex-col flex-grow transform-gpu transition-all duration-300 z-20" style={{ transform: "translateZ(30px)" }}>
         {/* Badge */}
         <span
           className="self-start text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full mb-4 border"
@@ -243,7 +269,7 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
         <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed flex-1">{project.description}</p>
 
         {/* Tech tags */}
-        <div className="flex flex-wrap gap-1.5 mt-4 mb-5">
+        <div className="flex flex-wrap gap-1.5 mt-4 mb-6">
           {project.tech.map(t => (
             <span
               key={t}
@@ -254,33 +280,33 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
           ))}
         </div>
 
-        {/* Links */}
-        <div className="flex gap-3">
-          {project.github && (
-            <motion.a
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-            >
-              <Github size={14} />
-              Source Code
-            </motion.a>
-          )}
+        {/* Links / Buttons */}
+        <div className="flex flex-wrap sm:flex-nowrap gap-3 mt-auto pt-5 border-t border-gray-200/50 dark:border-white/5">
           {project.demo && (
             <motion.a
               href={project.demo}
               target="_blank"
               rel="noopener noreferrer"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-1.5 text-xs font-medium transition-colors"
-              style={{ color: project.accent }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-xl text-white shadow-md hover:shadow-lg transition-all"
+              style={{ backgroundColor: project.accent }}
             >
-              <ExternalLink size={14} />
+              <ExternalLink size={16} />
               View Project
+            </motion.a>
+          )}
+          {project.github && (
+            <motion.a
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-xl bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white hover:bg-gray-200 dark:hover:bg-white/10 transition-all"
+            >
+              <Github size={16} />
+              Source Code
             </motion.a>
           )}
         </div>
@@ -339,10 +365,11 @@ export default function Home() {
 
   return (
     <>
+      <AnimatedBackground />
       <ScrollProgress />
       <Navbar />
 
-      <main className="overflow-x-hidden bg-light-bg dark:bg-dark-bg transition-colors duration-500">
+      <main className="overflow-x-hidden bg-transparent transition-colors duration-500">
         <Hero />
 
         {/* ──── ABOUT ──── */}
@@ -360,13 +387,25 @@ export default function Home() {
                 <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-5 leading-tight">
                   The Engineering<br />Mindset
                 </h2>
-                <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-10 max-w-md">
-                  Rooted in the intersection of hardware precision and software
-                  agility, my approach is grounded in Computer Systems Engineering.
-                  I build robust desktop and web backends in C# and Java, craft
-                  machine-learning pipelines in Python, and go all the way down to
-                  bare-metal embedded firmware in C/C++ and VHDL.
+
+                <p className="text-gray-600 dark:text-gray-400 leading-relaxed mb-6 max-w-md">
+                  I am a Computer Systems Engineering student specializing in scalable systems that bridge hardware and software seamlessly.
                 </p>
+
+                <ul className="space-y-4 mb-10 text-gray-600 dark:text-gray-400 text-sm max-w-md">
+                  <motion.li initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }} viewport={{ once: true }} className="flex items-start gap-3">
+                    <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />
+                    <span><strong className="text-gray-900 dark:text-white font-semibold">Frontend & Web:</strong> HTML, CSS, JavaScript, and modern UI/UX implementation.</span>
+                  </motion.li>
+                  <motion.li initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} viewport={{ once: true }} className="flex items-start gap-3">
+                    <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />
+                    <span><strong className="text-gray-900 dark:text-white font-semibold">Backend & Desktop:</strong> C#, ASP.NET Core MVC, Java, and Python ML.</span>
+                  </motion.li>
+                  <motion.li initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }} viewport={{ once: true }} className="flex items-start gap-3">
+                    <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />
+                    <span><strong className="text-gray-900 dark:text-white font-semibold">Embedded Systems:</strong> C/C++, ESP32/ESP8266, Arduino, PIC MCU, and VHDL Firmware.</span>
+                  </motion.li>
+                </ul>
 
                 {/* Stats */}
                 <div className="flex gap-12">
